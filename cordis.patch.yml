@@ -1,0 +1,35 @@
+# dsh-log-guardian bundle patch: 插入日志安全监控哨兵行。
+#
+# 默认配置：
+#   files: []          —— 空 = 自动探测日志目录（$DSH_HOME/logs 下的 *.log / main.*）；
+#                         也可显式填绝对路径（文件或目录，目录则监控其下 *.log 与 main.*）。
+#   keywords: [...]    —— 高危关键词；支持普通子串（大小写不敏感）与 /regex/flags 字面量。
+#   pollMs: 2000       —— fs.watch 不可用时的降级轮询间隔（毫秒）。
+#   notify: true       —— 是否启用前端双通道告警（WebSocket 推送 + 页面 toast）。
+#   dedupeMs: 5000     —— 同一文件同一行同一关键词的重复告警去重窗口（毫秒）。
+#   maxAlerts: 200     —— 内存中保留的最近告警条数（供 /alerts 轮询回放）。
+#
+# 运行时环境变量覆盖（无需重启）：
+#   LOG_MONITOR_KEYWORDS —— 逗号分隔关键词，覆盖 keywords。
+#   LOG_MONITOR_FILES    —— 逗号/分号分隔日志路径，覆盖 files。
+#   LOG_MONITOR_POLL_MS  —— 覆盖 pollMs。
+
+- insert:
+    - id: log-guardian
+      name: dsh-log-guardian
+      config:
+        files: []
+        keywords:
+          - cordis_define
+          - cordis_run
+          - cordis_stop
+          - cordis_undefine
+          - cordis_runtime_inspect
+          - subprocess
+          - child_process
+          - execSync
+          - spawnSync
+        pollMs: 2000
+        notify: true
+        dedupeMs: 5000
+        maxAlerts: 200
