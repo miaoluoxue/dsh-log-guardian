@@ -7,7 +7,7 @@ on:
 
 jobs:
   test:
-    name: Smoke test (Node ${{ matrix.node }})
+    name: Tests (Node ${{ matrix.node }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -24,3 +24,6 @@ jobs:
 
       - name: Run smoke test
         run: node test/smoke.mjs
+
+      - name: Run integration test
+        run: node test/integration.mjs
